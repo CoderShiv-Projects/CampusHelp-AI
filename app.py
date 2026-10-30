@@ -10,6 +10,7 @@ import streamlit as st
 
 import ai_service
 import db
+import lab_ui
 
 st.set_page_config(page_title="CampusHelp AI", page_icon="🎓", layout="wide")
 
@@ -23,9 +24,9 @@ SLA_HOURS = {"Critical": 4, "High": 24, "Medium": 72, "Low": 120}
 UI_TRANSITIONS = {"Open": ["Closed"], "Assigned": ["In Progress", "Closed"],
                   "In Progress": ["Assigned", "Closed"], "Resolved": ["In Progress", "Closed"], "Closed": []}
 NAV = {
-    "STUDENT": ["Dashboard", "Submit Complaint", "My Tickets", "About / System Status"],
-    "STAFF": ["Dashboard", "Staff Ticket Queue", "Analytics", "About / System Status"],
-    "ADMIN": ["Dashboard", "Staff Ticket Queue", "Analytics", "About / System Status"],
+    "STUDENT": ["Dashboard", "Submit Complaint", "My Tickets", "AI Quiz Lab", "About / System Status"],
+    "STAFF": ["Dashboard", "Staff Ticket Queue", "Analytics", "AI Insights", "AI Quiz Lab", "About / System Status"],
+    "ADMIN": ["Dashboard", "Staff Ticket Queue", "Analytics", "AI Insights", "AI Quiz Lab", "About / System Status"],
 }
 EMERGENCY_RE = re.compile(r"(^|[^a-z])(fire|smoke|gas leak|short[- ]?circuit|sparking|sparks|electric shock|"
                           r"electrocut[a-z]*|exposed wires?|flood(ed|ing)?|injur(y|ed)|collapse[a-z]*)([^a-z]|$)", re.I)
@@ -637,8 +638,17 @@ def page_about(user: dict):
              "Demo mode supports: login, complaint submission + real AI analysis, viewing tickets, dashboard, analytics (in-memory data).")
 
 
+def page_quiz(user: dict):
+    lab_ui.quiz_page()
+
+
+def page_insights(user: dict):
+    lab_ui.insights_page(df_for_user(user), user)
+
+
 PAGES = {"Dashboard": page_dashboard, "Submit Complaint": page_submit, "My Tickets": page_my_tickets,
-         "Staff Ticket Queue": page_queue, "Analytics": page_analytics, "About / System Status": page_about}
+         "Staff Ticket Queue": page_queue, "Analytics": page_analytics, "AI Insights": page_insights,
+         "AI Quiz Lab": page_quiz, "About / System Status": page_about}
 
 
 def main():
